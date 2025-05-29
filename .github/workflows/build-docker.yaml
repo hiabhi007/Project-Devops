@@ -27,7 +27,7 @@ jobs:
 
     - name: Build Docker image
       run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/myapp:${{ github.sha }} .
+        docker build . -t ${{ secrets.DOCKER_USERNAME }}/myapp:${{ github.sha }} 
 
     - name: Run Trivy vulnerability scan
       uses: aquasecurity/trivy-action@0.28.0 # use latest stable
