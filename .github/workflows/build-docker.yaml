@@ -27,12 +27,16 @@ jobs:
 
     - name: Build Docker image
       run: |
-        docker build . -t ${{ secrets.DOCKER_USERNAME }}/myapp:${{ github.sha }} 
+        docker build . -t docker.io/${{ secrets.DOCKER_USERNAME }}/myapp:${{ github.sha }} 
+
+    - name: Check image tag
+      run: |
+       echo "Using image: ${{ secrets.DOCKER_USERNAME }}/myapp:${{ github.sha }}"
 
     - name: Run Trivy vulnerability scan
       uses: aquasecurity/trivy-action@0.28.0 # use latest stable
       with:
-        image: ${{ secrets.DOCKER_USERNAME }}/myapp:${{ github.sha }}
+        image-ref: 'docker.io/${{ secrets.DOCKER_USERNAME }}/myapp:${{ github.sha }}'
         format: 'sarif'
         output: trivy-results.sarif
         exit-code: '0'  # do not fail even if vulnerabilities exist
