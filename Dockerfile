@@ -1,15 +1,35 @@
+
+FROM node:22-alpine AS builder
+
+WORKDIR /app
+
+COPY package.json ./
+RUN npm install --omit=dev
+
+
+COPY server.js ./
+
+
 FROM node:22-alpine
 
+
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
+
+WORKDIR /app
+
+
+COPY --from=builder /app /app
+
+
+RUN chown -R appuser:appgroup /app
+
+
+USER appuser
+
+
 ENV PORT=4000
+EXPOSE 4000
 
-WORKDIR /usr/src/app
-
-# Install dependencies
-COPY package.json /usr/src/app/
-RUN npm install
-
-# Copy source
-COPY server.js /usr/src/app
-
-EXPOSE $PORT
-CMD [ "npm", "start" ]
+# Start the app
+CMD ["node", "server.js"]
