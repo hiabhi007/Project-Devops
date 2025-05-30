@@ -18,12 +18,19 @@ jobs:
 
       - name: Uninstall previous Helm release (if exists)
         run: |
-          if (helm status myapp --namespace default -ErrorAction SilentlyContinue) {
-           Write-Host "Release 'myapp' found, uninstalling..."
+          try {
+           helm status myapp --namespace default 2>$null
+           $releaseExists = $LASTEXITCODE -eq 0
+           } catch {
+           $releaseExists = $false
+          }
+
+          if ($releaseExists) {
+          Write-Host "Release 'myapp' found, uninstalling..."
            helm uninstall myapp --namespace default
-             } else {
-             Write-Host "No existing release 'myapp' to uninstall"
-             }
+           } else {
+          Write-Host "No existing release 'myapp' to uninstall"
+          }
 
       - name: Deploy to Minikube using Helm
         run: |
