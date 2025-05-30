@@ -16,6 +16,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Uninstall previous Helm release (if exists)
+        run: |
+          helm uninstall myapp --namespace default || Write-Host "No existing release to uninstall"
+
       - name: Deploy to Minikube using Helm
         run: |
          helm upgrade --install myapp ./mychart --set image.repository=docker.io/${{ secrets.DOCKER_USERNAME }}/myapp --set image.tag=${{ github.sha }}
@@ -24,7 +28,7 @@ jobs:
         run: |
           kubectl rollout status deployment/myapp
           kubectl get pods -o wide
-          
+
       - name: Clean up workspace
         run: |
-          sudo rm -rf "$GITHUB_WORKSPACE"/*
+          Remove-Item "$env:GITHUB_WORKSPACE\*" -Recurse -Force

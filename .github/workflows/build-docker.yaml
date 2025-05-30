@@ -41,7 +41,10 @@ jobs:
       if: always()
       uses: github/codeql-action/upload-sarif@v3
       with:
-        sarif_file: trivy-results.sarif   
+        sarif_file: trivy-results.sarif  
+
+    - name: Show SARIF file contents
+      run: cat trivy-results.sarif 
 
 
     - name: Log in to Docker Hub
@@ -55,8 +58,6 @@ jobs:
         docker push ${{ secrets.DOCKER_USERNAME }}/myapp:${{ github.sha }}
 
   
-    - name: Clean up workspace
-      run: |
-        sudo rm -rf "$GITHUB_WORKSPACE"/*
+   
 
    
