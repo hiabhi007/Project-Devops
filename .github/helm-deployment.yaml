@@ -4,9 +4,9 @@ name: Helm Deploy to Minikube
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main  # or choose a protected branch if needed
+  # push:
+  #   branches:
+  #     - main  # or choose a protected branch if needed
 
 jobs:
   helm-deploy:
