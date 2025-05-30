@@ -1,0 +1,28 @@
+# .github/workflows/deploy.yaml
+
+name: Helm Deploy to Minikube
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main  # or choose a protected branch if needed
+
+jobs:
+  helm-deploy:
+    runs-on: self-hosted  # This must be the machine where Minikube is running
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Deploy to Minikube using Helm
+        run: |
+          helm upgrade --install myapp ./mychart \
+            --set image.repository=docker.io/${{ secrets.DOCKER_USERNAME }}/myapp \
+            --set image.tag=${{ github.sha }}
+
+      - name: Verify Deployment
+        run: |
+          kubectl rollout status deployment/myapp
+          kubectl get pods -o wide
