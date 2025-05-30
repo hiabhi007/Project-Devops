@@ -22,6 +22,16 @@ spec:
           env:
             - name: PORT
               value: "{{ .Values.containerPort }}"
+            - name: USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: myapp-secret
+                  key: username
+            - name: PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: myapp-secret
+                  key: password
           resources:
             requests:
               memory: "{{ .Values.resources.requests.memory }}"
