@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus-custom
+  labels:
+    app: prometheus
+spec:
+  ports:
+    - port: 9000              # Your desired external port
+      targetPort: 9090        # Actual container port for Prometheus
+      protocol: TCP
+      name: web
+  selector:
+    app.kubernetes.io/name: prometheus
+    app.kubernetes.io/component: server

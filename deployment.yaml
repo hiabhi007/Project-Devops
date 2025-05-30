@@ -13,6 +13,10 @@ spec:
     metadata:
       labels:
         app: nodejs-rest-api
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9100"
+        prometheus.io/path: "/metrics"
     spec:
       containers:
         - name: nodejs-rest-api
@@ -32,3 +36,21 @@ spec:
                 secretKeyRef:
                   name: myapp-secret
                   key: password
+        - name: prometheus-sidecar
+          image: gcr.io/google-containers/prometheus-to-sd:v0.5.0
+          args:
+            - --source=nodejs:http://localhost:4000/metrics
+            - --stackdriver-prefix=custom.googleapis.com
+            - --pod-id=$(POD_NAME)
+            - --namespace-id=$(POD_NAMESPACE)
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          ports:
+            - containerPort: 9100
