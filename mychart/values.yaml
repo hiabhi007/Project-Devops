@@ -1,0 +1,24 @@
+replicaCount: 1
+
+image:
+  repository: bhatta007/myapp
+  tag: 06c31668fa02576831235cccaee486dd7aa4e082
+
+containerPort: 4000
+
+
+ingress:
+  host: check.local
+
+service:
+  name: nodejs-rest-api-service
+  port: 4000
+
+
+resources:
+  requests:
+    memory: "64Mi"
+    cpu: "250m"
+  limits:
+    memory: "128Mi"
+    cpu: "500m"
