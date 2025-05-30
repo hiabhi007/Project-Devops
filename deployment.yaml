@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodejs-rest-api
+  labels:
+    app: nodejs-rest-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nodejs-rest-api
+  template:
+    metadata:
+      labels:
+        app: nodejs-rest-api
+    spec:
+      containers:
+        - name: nodejs-rest-api
+          image: bhatta007/myapp:06c31668fa02576831235cccaee486dd7aa4e082
+          ports:
+            - containerPort: 4000
+          env:
+            - name: PORT
+              value: "4000"

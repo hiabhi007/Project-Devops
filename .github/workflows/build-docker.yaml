@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   docker-build-push:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
     - name: Checkout repository
@@ -45,9 +45,10 @@ jobs:
         exit-code: '0'  # do not fail even if vulnerabilities exist
 
     - name: Upload Trivy scan results to GitHub Security tab
+      if: always()
       uses: github/codeql-action/upload-sarif@v3
       with:
-        sarif_file: trivy-results.sarif
+        sarif_file: trivy-results.sarif   
 
 
     - name: Log in to Docker Hub
