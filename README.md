@@ -1,104 +1,87 @@
-# Node.js REST API Example
+Node.js App on Kubernetes
+This project demonstrates deploying a Node.js application on a local Kubernetes cluster using Minikube (or KinD), with production-like features including resource management, observability, secrets handling, and external access.
 
-This example shows how to implement a simple REST API using Node.js and Docker. The API has five endpoints that all return a simple response in JSON.
 
-* GET /
-* GET /:id
-* POST /
-* PUT /
-* DELETE /
+Architecture & Design Decisions
+1. Containerization
+The application is packaged as a Docker image and stored in a container registry (e.g., Docker Hub).
 
-## Build
+2. Kubernetes Deployment
+Deployed to a local Kubernetes cluster using Minikube.
 
-```
-docker build -t nodejs-rest-api-example .
-```
+Helm is used to manage Kubernetes manifests and configuration.
 
-## Run
+Resource Management: CPU and memory requests/limits ensure predictable scheduling.
 
-Run in default port `4000`:
-```
-docker run -p 4000:4000 -d nodejs-rest-api-example
-```
+Probes:
 
-Run in custom port, e.g., `8080`:
-```
-docker run -e PORT=8080 -p 8080:8080 -d nodejs-rest-api-example
-```
+Readiness Probe confirms when the app is ready to serve traffic.
 
-## Test
+Liveness Probe detects and recovers crashed containers.
 
-#### GET /
+Ingress Controller: Exposes the app externally using Minikube’s built-in ingress add-on
 
-```
-curl -i http://localhost:4000/
+3. Secrets Management
+Uses Kubernetes Secrets to securely pass a username and password to the application.
 
-HTTP/1.1 200 OK
-X-Powered-By: Express
-Content-Type: application/json
-Date: Tue, 28 Feb 2017 10:38:31 GMT
-Connection: keep-alive
-Transfer-Encoding: chunked
+4. Observability
+Logging: Logs are sent to stdout for compatibility with log aggregators.
 
-{"response":"This is GET method."}
-```
+Monitoring: Metrics can be exposed via a /metrics endpoint for scraping by Prometheus.
 
-#### GET /:id
+5. GitHub Actions CI/CD
+CI/CD is split into two separate workflows:
 
-```
-curl -i http://localhost:4000/123
+🔁 Continuous Integration (build-docker.yml)
+Triggered on main branch push.
 
-HTTP/1.1 200 OK
-X-Powered-By: Express
-Content-Type: application/json
-Date: Tue, 28 Feb 2017 10:39:04 GMT
-Connection: keep-alive
-Transfer-Encoding: chunked
+Jobs:
 
-{"response":"This is GET method with id=123."}
-```
+Build Docker Image
 
-#### POST /
+Trivy Vulnerability Scan
 
-```
-curl -i -X POST http://localhost:4000
+Push Image to Docker Hub
 
-HTTP/1.1 200 OK
-X-Powered-By: Express
-Content-Type: application/json
-Date: Tue, 28 Feb 2017 10:38:47 GMT
-Connection: keep-alive
-Transfer-Encoding: chunked
+Runs on ubuntu-latest
 
-{"response":"This is POST method."}
-```
+🚀 Continuous Deployment (helm-deployment.yml)
+Manually triggered  via workflow dispatch (workflow_dispatch).
 
-#### PUT /
+Runs on a self-hosted GitHub Actions runner with Minikube.
 
-```
-curl -i -X PUT http://localhost:4000
+Jobs:
 
-HTTP/1.1 200 OK
-X-Powered-By: Express
-Content-Type: application/json
-Date: Tue, 28 Feb 2017 10:40:48 GMT
-Connection: keep-alive
-Transfer-Encoding: chunked
+Pull the Docker image
 
-{"response":"This is PUT method."}
-```
+Deploy the app using Helm to the local Minikube cluster
+    
 
-#### DELETE /
+🛠️ How to Run the Project (End-to-End)
+Step 1: Install Prerequisites
+Ensure these are installed:
 
-```
-curl -i -X DELETE http://localhost:4000
+WSL (on Windows)
 
-HTTP/1.1 200 OK
-X-Powered-By: Express
-Content-Type: application/json
-Date: Tue, 28 Feb 2017 10:41:11 GMT
-Connection: keep-alive
-Transfer-Encoding: chunked
+Docker
 
-{"response":"This is DELETE method."}
-```
+Minikube (you have to install and enable)
+
+    kubectl
+
+    Helm
+
+    prometheus 
+
+    ingress
+
+
+⚙️ How to Set Up a Self-Hosted GitHub Actions 
+🔗 Official GitHub Docs
+GitHub’s official self-hosted runner guide:
+👉 https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners
+
+
+
+
+
