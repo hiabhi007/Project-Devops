@@ -31,6 +31,7 @@ jobs:
            } else {
           Write-Host "No existing release 'myapp' to uninstall"
           }
+          exit 0
 
       - name: Deploy to Minikube using Helm
         run: |
