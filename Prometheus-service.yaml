@@ -6,7 +6,7 @@ metadata:
     app: prometheus
 spec:
   ports:
-    - port: 9000              # Your desired external port
+    - port: 9090              # Your desired external port
       targetPort: 9090        # Actual container port for Prometheus
       protocol: TCP
       name: web

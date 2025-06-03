@@ -2,13 +2,16 @@ replicaCount: 1
 
 image:
   repository: bhatta007/myapp
-  tag: 06c31668fa02576831235cccaee486dd7aa4e082
+  tag: b99cfa1ac0bcceaaa5a2509e2bc69def7b2b4543
 
 containerPort: 4000
 
 
 ingress:
-  host: check.local
+  host: app.local
+
+prometheus:
+  host: prometheus.local 
 
 service:
   name: nodejs-rest-api-service
