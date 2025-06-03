@@ -67,6 +67,53 @@ jobs:
         path: image-tag.txt
 
   
-   
+  helm-deploy:
+    needs: docker-build-push
+    runs-on: self-hosted  # This must be the machine where Minikube is running
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Uninstall previous Helm release (if exists)
+        run: |
+          try {
+           helm status myapp --namespace default 2>$null
+           $releaseExists = $LASTEXITCODE -eq 0
+           } catch {
+           $releaseExists = $false
+          }
+
+          if ($releaseExists) {
+          Write-Host "Release 'myapp' found, uninstalling..."
+           helm uninstall myapp --namespace default
+           } else {
+          Write-Host "No existing release 'myapp' to uninstall"
+          }
+          exit 0
+
+      - name: Download image tag artifact
+        uses: actions/download-artifact@v4
+        with:
+         name: image-tag
+
+      - name: Read image tag into environment variable
+        id: read_tag
+        run: |
+         $tag = Get-Content 'image-tag.txt'
+          echo "IMAGE_TAG=$tag" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Deploy to Minikube using Helm
+        run: |
+         helm upgrade --install myapp ./mychart --set image.repository=docker.io/${{ secrets.DOCKER_USERNAME }}/myapp --set image.tag=${{ github.sha }}
+
+      - name: Verify Deployment
+        run: |
+          kubectl rollout status deployment/myapp
+          kubectl get pods -o wide
+
+      - name: Clean up workspace
+        run: |
+          Remove-Item "$env:GITHUB_WORKSPACE\*" -Recurse -Force   
 
    
