@@ -32,30 +32,34 @@ Monitoring: Metrics can be exposed via a /metrics endpoint for scraping by Prome
 5. GitHub Actions CI/CD
 CI/CD is split into two separate workflows:
 
-🔁 Continuous Integration (build-docker.yml)
-Triggered on main branch push.
+    🔁 Continuous Integration (build-docker.yml) Runs on ubuntu-latest
+    Triggered on main branch push.
 
-Jobs:
+            Jobs:
 
-Build Docker Image
+                Build Docker Image
 
-Trivy Vulnerability Scan
+                Trivy Vulnerability Scan
 
-Push Image to Docker Hub
+                Push Image to Docker Hub
 
-Runs on ubuntu-latest
-
-🚀 Continuous Deployment (helm-deployment.yml)
-Manually triggered  via workflow dispatch (workflow_dispatch).
-
-Runs on a self-hosted GitHub Actions runner with Minikube.
-
-Jobs:
-
-Pull the Docker image
-
-Deploy the app using Helm to the local Minikube cluster
     
+🚀 Continuous Deployment (helm-deployment.yml)
+Manually triggered  via workflow dispatch (workflow_dispatch).Runs on a self-hosted GitHub Actions runner with Minikube.
+
+            Jobs:
+
+                Pull the Docker image
+
+                Deploy the app using Helm to the local Minikube cluster
+    
+
+
+⚙️ How to Set Up a Self-Hosted GitHub Actions 
+🔗 Official GitHub Docs
+GitHub’s official self-hosted runner guide:
+👉 https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners
+
 
 🛠️ How to Run the Project (End-to-End)
 Step 1: Install Prerequisites
@@ -73,13 +77,7 @@ Minikube (you have to install and enable)
 
     prometheus 
 
-    ingress
-
-
-⚙️ How to Set Up a Self-Hosted GitHub Actions 
-🔗 Official GitHub Docs
-GitHub’s official self-hosted runner guide:
-👉 https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners
+    ingress(enable)
 
 
 
