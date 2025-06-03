@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: bhatta007/myapp
-  tag: b99cfa1ac0bcceaaa5a2509e2bc69def7b2b4543
+  # tag: b99cfa1ac0bcceaaa5a2509e2bc69def7b2b4543
 
 containerPort: 4000
 
