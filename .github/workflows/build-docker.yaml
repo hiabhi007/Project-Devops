@@ -1,4 +1,4 @@
-name: Docker Build and Push with Trivy Scan
+name: Docker Build and Push with Trivy Scan and helm deployement
 
 on:
   push:
