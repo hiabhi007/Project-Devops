@@ -1,0 +1,17 @@
+#this is for nodeport testing.
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nodejs-rest-api-service-nodeport
+  labels:
+    app: nodejs-rest-api
+spec:
+  type: NodePort
+  selector:
+    app: nodejs-rest-api
+  ports:
+    - protocol: TCP
+      port: 4000
+      targetPort: 4000
+      nodePort: 32000  # optional, between 30000-32767
